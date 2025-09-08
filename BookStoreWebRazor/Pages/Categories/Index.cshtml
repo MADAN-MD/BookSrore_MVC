@@ -1,15 +1,13 @@
-﻿@model IEnumerable<BookSrore.Models.Category>
-@{
-    ViewData["Title"] = "Categories";
-}
+﻿@page
+@model BookStoreWebRazor.Pages.Categories.IndexModel
 
+<h1>Category List</h1>
 
-<h1>Category</h1>
 <div>
-    <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+    <a asp-page="/Categories/Create"  class="btn btn-primary">
         <i class="bi bi-plus-circle"></i> New
     </a>
-    
+
 </div>
 <table class="table table-hover">
     <thead>
@@ -21,27 +19,25 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var category in Model)
-        { 
+        @foreach (var category in Model.CategoryList)
+        {
             <tr>
                 <th scope="row">@category.Id</th>
                 <td>@category.Name</td>
                 <td>@category.DisplayOrder</td>
                 <td>
                     <div>
-                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-info">
-                            <i class="bi bi-pencil-square"></i>
+                        <a asp-page="/categories/edit"  asp-route-id="@category.Id" class="btn btn-info">
+                            <i class="bi bi-pencil-square"></i> Edit
                         </a>
-                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger">
-                            <i class="bi bi-trash"></i>
+                        <a asp-page="/Categories/Delete"  asp-route-id="@category.Id" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete
                         </a>
                     </div>
-                    
+
                 </td>
             </tr>
 
         }
     </tbody>
 </table>
-
-

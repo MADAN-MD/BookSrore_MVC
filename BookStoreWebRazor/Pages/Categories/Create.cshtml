@@ -1,0 +1,38 @@
+﻿@page
+@model BookStoreWebRazor.Pages.Categories.CreateModel
+
+
+<div>
+    <h1>Create Category</h1>
+
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="Category.Name" class="form-label"></label>
+            <input asp-for="Category.Name" class="form-control">
+            <span asp-validation-for="Category.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Category.DisplayOrder" class="form-label"></label>
+            <input asp-for="Category.DisplayOrder" class="form-control">
+            <span asp-validation-for="Category.DisplayOrder" class="text-danger"></span>
+
+        </div>
+
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-page="/Categories/index"  class="btn btn-secondary">Back To Category</a>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
