@@ -27,9 +27,15 @@
                 <td>@category.Name</td>
                 <td>@category.DisplayOrder</td>
                 <td>
-                    <button type="button" class="btn btn-warning">
-                        <i class="bi bi-info-circle-fill"></i>
-                        </button>
+                    <div>
+                        <a asp-controller="Category" asp-action="Edit" class="btn btn-info">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a asp-controller="Category" asp-action="Delete" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                    
                 </td>
             </tr>
 

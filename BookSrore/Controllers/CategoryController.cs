@@ -25,14 +25,28 @@ namespace BookSrore.Controllers
         [HttpPost]
         public IActionResult Create(Category model)
         {
-            if (!ModelState.IsValid)
+            try
+            {
+                if (model.Name == model.DisplayOrder.ToString())
+                {
+                    ModelState.AddModelError("name", "Name and order value should be different.");
+                }
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+
+                _context.Categories.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
             {
 
+                throw ex;
             }
-
-            _context.Categories.Add(model);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            
+            
         }
     }
 }
