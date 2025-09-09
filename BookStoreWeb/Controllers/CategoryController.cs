@@ -1,4 +1,5 @@
 ﻿using BookSrore.DataAccess.Data;
+using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,17 +7,17 @@ namespace BookSrore.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        public CategoryController(ApplicationDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var categoryList = _context.Categories.ToList();
+            var categoryList = _unitOfWork.Category.GetAll().ToList();
             return View(categoryList);
         }
-
+         
         public IActionResult Create()
         {
             return View();
@@ -36,8 +37,8 @@ namespace BookSrore.Controllers
                     return View();
                 }
 
-                _context.Categories.Add(model);
-                _context.SaveChanges();
+                _unitOfWork.Category.Add(model);
+                _unitOfWork.Save();
 
                 TempData["success"] = "Category created successfully.";
                 return RedirectToAction("Index");
@@ -59,7 +60,7 @@ namespace BookSrore.Controllers
                 {
                     return NotFound();
                 }
-                var entity = _context.Categories.FirstOrDefault(x => x.Id == id);
+                var entity = _unitOfWork.Category.Get(x => x.Id == id);
 
                 if (entity == null)
                 {
@@ -83,7 +84,7 @@ namespace BookSrore.Controllers
                 {
                     return View(model);
                 }
-                var entity = _context.Categories.FirstOrDefault(x => x.Id == model.Id);
+                var entity = _unitOfWork.Category.Get(x => x.Id == model.Id);
                 if (entity == null)
                 {
                     return NotFound();
@@ -92,8 +93,8 @@ namespace BookSrore.Controllers
                 entity.Name = model.Name;
                 entity.DisplayOrder = model.DisplayOrder;
 
-                _context.Categories.Update(entity);
-                _context.SaveChanges();
+                _unitOfWork.Category.Update(entity);
+                _unitOfWork.Save();
                 TempData["success"] = "Category updated successfully.";
                 return RedirectToAction("Index");
             }
@@ -114,15 +115,15 @@ namespace BookSrore.Controllers
                 {
                     return NotFound();
                 }
-                var entity = _context.Categories.FirstOrDefault(x => x.Id == id);
+                var entity = _unitOfWork.Category.Get(x => x.Id == id);
 
                 if (entity == null)
                 {
                     return NotFound();
                 }
 
-                _context.Categories.Remove(entity);
-                _context.SaveChanges();
+                _unitOfWork.Category.Remove(entity);
+                _unitOfWork.Save();
                 TempData["success"] = "Category removed successfully.";
                 return RedirectToAction("Index");
             }
