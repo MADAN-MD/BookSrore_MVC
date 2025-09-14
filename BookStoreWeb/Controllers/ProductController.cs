@@ -23,6 +23,7 @@ namespace BookStoreWeb.Controllers
             return View(products);
         }
 
+        [HttpGet]
         public IActionResult Upsert(int? id)
         {
             IEnumerable<SelectListItem> categoryList = _unitOfWork.Category
@@ -119,6 +120,43 @@ namespace BookStoreWeb.Controllers
             }
         }
 
+        //public IActionResult Delete(int? id)
+        //{
+        //    try
+        //    {
+        //        if (id == null || id == 0)
+        //        {
+        //            return NotFound();
+        //        }
+        //        var entity = _unitOfWork.Product.Get(x => x.Id == id);
+
+        //        if (entity == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        _unitOfWork.Product.Remove(entity);
+        //        _unitOfWork.Save();
+        //        TempData["success"] = "Product removed successfully.";
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw ex;
+        //    }
+        //}
+        
+
+        #region API CALL
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+            return Json(new {data =  products});
+        }
+
+        [HttpDelete]
         public IActionResult Delete(int? id)
         {
             try
@@ -134,18 +172,26 @@ namespace BookStoreWeb.Controllers
                     return NotFound();
                 }
 
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                var oldImagePath = Path.Combine(wwwRootPath, entity.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+
+
+
                 _unitOfWork.Product.Remove(entity);
                 _unitOfWork.Save();
-                TempData["success"] = "Product removed successfully.";
-                return RedirectToAction("Index");
+
+                return Json(new { success = true, message = "Deleted successfully" });
             }
             catch (Exception ex)
             {
 
                 throw ex;
             }
-
-
         }
+        #endregion
     }
 }
