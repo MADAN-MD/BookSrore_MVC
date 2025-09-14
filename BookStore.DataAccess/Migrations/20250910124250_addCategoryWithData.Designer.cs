@@ -3,6 +3,7 @@ using BookSrore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookSrore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910124250_addCategoryWithData")]
+    partial class addCategoryWithData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,10 +88,6 @@ namespace BookSrore.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
@@ -120,7 +119,6 @@ namespace BookSrore.DataAccess.Migrations
                             CategoryId = 1,
                             Description = "Tiny Changes, Remarkable Results\r\nNo matter your goals, Atomic Habits offers a proven framework for improving--every day. James Clear, one of the world's leading experts on habit formation, reveals practical strategies that will teach you exactly how to form good habits, break bad ones, and master the tiny behaviors that lead to remarkable results.",
                             ISBN = "B07D23CFGR",
-                            ImageUrl = "",
                             ListPrice = 10.0,
                             Price = 8.5,
                             Price100 = 3.5,
@@ -134,7 +132,6 @@ namespace BookSrore.DataAccess.Migrations
                             CategoryId = 2,
                             Description = "Recent breakthroughs in AI have not only increased demand for AI products, they've also lowered the barriers to entry for those who want to build AI products. The model-as-a-service approach has transformed AI from an esoteric discipline into a powerful development tool that anyone can use. Everyone, including those with minimal or no prior AI experience, can now leverage AI models to build applications.",
                             ISBN = "9781098166304",
-                            ImageUrl = "",
                             ListPrice = 50.0,
                             Price = 40.5,
                             Price100 = 25.5,
@@ -148,7 +145,6 @@ namespace BookSrore.DataAccess.Migrations
                             CategoryId = 1,
                             Description = "As a third-year Ph.D. candidate, Olive Smith doesn't believe in lasting romantic relationships--but her best friend does, and that's what got her into this situation. Convincing Anh that Olive is dating and well on her way to a happily ever after was always going to take more than hand-wavy Jedi mind tricks: Scientists require proof. So, like any self-respecting biologist, Olive panics and kisses the first man she sees.",
                             ISBN = "B08T6XN4FP",
-                            ImageUrl = "",
                             ListPrice = 30.0,
                             Price = 20.5,
                             Price100 = 14.5,

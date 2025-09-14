@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,16 @@ namespace BookStore.Models
         [Display(Name = "Price for 100+")]
         [Range(1, 1000)]
         public double Price100 { get; set; }
+
+        //Add foreignkey in child table
+        public int CategoryId { get; set; }
+
+        [ForeignKey("CategoryId")]
+        [ValidateNever]
+        public Category Category { get; set; } //Navigation property
+
+        [ValidateNever]
+        public string ImageUrl { get; set; } 
 
     }
 }

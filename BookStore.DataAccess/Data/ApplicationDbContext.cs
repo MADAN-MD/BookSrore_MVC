@@ -32,6 +32,8 @@ namespace BookSrore.DataAccess.Data
                     Price = 8.5,
                     Price50= 5.5,
                     Price100= 3.5,
+                    CategoryId= 1,
+                    ImageUrl="",
                 },
                 new Product
                 {
@@ -44,6 +46,9 @@ namespace BookSrore.DataAccess.Data
                     Price = 40.5,
                     Price50 = 30.5,
                     Price100 = 25.5,
+                    CategoryId = 2,
+                    ImageUrl = "",
+
                 },
                 new Product
                 {
@@ -56,6 +61,9 @@ namespace BookSrore.DataAccess.Data
                     Price = 20.5,
                     Price50 = 16.5,
                     Price100 = 14.5,
+                    CategoryId=1,
+                    ImageUrl = "",
+
                 }
 
                 );

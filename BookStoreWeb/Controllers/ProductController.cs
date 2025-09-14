@@ -1,43 +1,94 @@
 ﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStoreWeb.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
+
         }
         public IActionResult Index()
         {
             var products = _unitOfWork.Product.GetAll().ToList();
+
             return View(products);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
-            return View();
+            IEnumerable<SelectListItem> categoryList = _unitOfWork.Category
+                .GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString(),
+                });
+
+            //ViewBag.CategoryList = categoryList;
+            ProductViewModel viewModel = new ProductViewModel()
+            {
+                CategoryList = categoryList,
+                Product = new Product()
+            };
+
+            if (id == null || id == 0)
+            {
+                return View(viewModel);
+            }
+            else
+            {
+                //update
+                viewModel.Product = _unitOfWork.Product.Get(x => x.Id == id);
+                return View(viewModel);
+            }
         }
 
         [HttpPost]
-        public IActionResult Create(Product model)
+        public IActionResult Upsert(ProductViewModel model, IFormFile? file)
         {
             try
             {
-                if (model.Title == model.Description.ToString())
-                {
-                    ModelState.AddModelError("title", "Title and Description should be different.");
-                }
                 if (!ModelState.IsValid)
                 {
-                    return View();
+                    IEnumerable<SelectListItem> categoryList = _unitOfWork.Category
+                                                                .GetAll()
+                                                                .Select(c => new SelectListItem
+                                                                {
+                                                                    Text = c.Name,
+                                                                    Value = c.Id.ToString(),
+                                                                });
+                    ProductViewModel viewModel = new ProductViewModel()
+                    {
+                        CategoryList = categoryList,
+                        Product = model.Product
+                    };
+                    return View(viewModel);
                 }
 
-                _unitOfWork.Product.Add(model);
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\products");
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    model.Product.ImageUrl = @"\images\products\" + fileName;
+                }
+
+                _unitOfWork.Product.Add(model.Product);
                 _unitOfWork.Save();
 
                 TempData["success"] = "Product created successfully.";
@@ -48,65 +99,6 @@ namespace BookStoreWeb.Controllers
 
                 throw ex;
             }
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            try
-            {
-                if (id == null || id == 0)
-                {
-                    return NotFound();
-                }
-                var entity = _unitOfWork.Product.Get(x => x.Id == id);
-
-                if (entity == null)
-                {
-                    return NotFound();
-                }
-                return View(entity);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Product model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-                var entity = _unitOfWork.Product.Get(x => x.Id == model.Id);
-                if (entity == null)
-                {
-                    return NotFound();
-                }
-
-                entity.Title = model.Title;
-                entity.Description = model.Description;
-                entity.ISBN = model.ISBN;
-                entity.Price = model.Price;
-                entity.ListPrice = model.ListPrice;
-                entity.Price50 = model.Price50;
-
-                _unitOfWork.Product.Update(entity);
-                _unitOfWork.Save();
-                TempData["success"] = "Product updated successfully.";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-
         }
 
         public IActionResult Delete(int? id)
