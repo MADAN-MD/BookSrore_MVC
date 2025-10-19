@@ -1,7 +1,9 @@
 using BookSrore.DataAccess.Data;
 using BookStore.DataAccess.Repository;
 using BookStore.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,8 +1,10 @@
 ﻿using BookStore.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookSrore.DataAccess.Data
 {
+    //public class ApplicationDbContext: IdentityDbContext 
     public class ApplicationDbContext: DbContext 
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
